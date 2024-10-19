@@ -1,0 +1,165 @@
+@startuml
+class Usuario {
+    protected String nombre
+    protected String apellido
+    protected String email
+    private String identificacion
+    private String password
+    private String telefono
+    private String direccion
+    private List<HistorialViajes> historialViajes
+    private List<MetodoPago> metodosPago
+    --
+    protected void registrarUsuario()
+    protected void iniciarSesion()
+    private void consultarHistorial()
+    private void gestionarMetodosDePago()
+    protected void modificarPerfil()
+}
+
+class Cliente extends Usuario {
+    private List<Boleto> boletosComprados
+    --
+    public void consultarBoletosComprados()
+    public void reservarAsiento()
+}
+
+class Administrador extends Usuario {
+private
+    private List<Ruta> rutasAsignadas
+    --
+    public void asignarRuta()
+    public void modificarTarifa()
+}
+
+class Conductor extends Usuario {
+    private Autobus autobusAsignado
+    --
+    public void reportarEstado()
+    public void registrarParada()
+}
+
+class Autobus {
+    private String numeroBus
+    private int capacidad
+    private GPS ubicacionActual
+    private Ruta rutaAsignada
+    private String estado
+    --
+    public void actualizarUbicacion()
+    public void consultarCapacidad()
+    public void consultarEstado()
+    public void obtenerRuta()
+}
+
+class Ruta {
+    private String numeroRuta
+    private List<Parada> paradas
+    private Horario horario
+    private int duracion
+    private double tarifa
+    --
+    public void consultarParadas()
+    public void obtenerHorario()
+    public void calcularDuracion()
+    public void consultarTarifa()
+}
+
+class Boleto {
+    private String numeroBoleto
+    private Usuario usuario
+    private Autobus autobus
+    private Ruta ruta
+    private int asiento
+    private double precio
+    private Date fechaCompra
+    --
+    public void generarBoleto()
+    public void consultarPrecio()
+    public void asignarAsiento()
+}
+
+class Pago {
+    private String tipoPago
+    private double monto
+    private String estado
+    private Date fechaPago
+    --
+    public void procesarPago()
+    public void verificarEstado()
+    public void devolverMonto()
+}
+
+class HistorialViaje {
+    private List<Viaje> viajes
+    private Usuario usuario
+    --
+    public void agregarViaje(Viaje viaje)
+    public void consultarViajes()
+    public void obtenerDetalleViaje()
+}
+
+class GPS {
+    private double latitud
+    private double longitud
+    private double velocidad
+    --
+    public void obtenerUbicacionActual()
+    public void actualizarUbicacion()
+    public void calcularDistancia()
+}
+
+class Parada {
+    private String nombreParada
+    private String direccion
+    private int numeroParada
+    --
+    public void consultarHorarios()
+    public void consultarServiciosDisponibles()
+}
+
+class MetodoPago {
+    private String tipo
+    private String numeroTarjeta
+    private String fechaExpiracion
+    private int cvv
+    private String titular
+    --
+    public void validarMetodo()
+    public void agregarMetodoPago()
+    public void eliminarMetodoPago()
+}
+
+class Viaje {
+    private Autobus autobus
+    private Ruta ruta
+    private Date fechaViaje
+    private String horaSalida
+    private String horaLlegada
+    --
+    public void consultarHoraSalida()
+    public void consultarHoraLlegada()
+    public void consultarDuracionViaje()
+}
+
+class Horario {
+    private String horaInicio
+    private String horaFin
+    private int frecuencia
+    --
+    public void consultarProximaSalida()
+    public void modificarHorario()
+}
+
+Usuario "1" -- "1..*" Boleto : compra
+Usuario "1" -- "1..*" HistorialViaje : tiene
+Usuario "1" -- "1..*" MetodoPago : usa
+Boleto "1" -- "1" Autobus : asignado a
+Boleto "1" -- "1" Ruta : asignado a
+Boleto "1" -- "1" Pago : pagado con
+Autobus "1" -- "1" Ruta : sigue
+Autobus "1" -- "1" GPS : tiene
+Ruta "1" -- "1..*" Parada : tiene
+Ruta "1" -- "1" Horario : sigue
+HistorialViaje "1" -- "1..*" Viaje : incluye
+@enduml
